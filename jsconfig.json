@@ -11,10 +11,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "paths": {
-      "@/*": ["./*"],
-      "@core/*": ["./core/*"],
-      "@infrastructure/*": ["./lib/infrastructure/*"],
-      "@components/*": ["./components/*"],
+      "@/*": ["./src/*"],
+      "@core/*": ["./src/core/*"],
+      "@infrastructure/*": ["./src/infrastructure/*"],
+      "@components/*": ["./src/components/*"],
       "@lib/*": ["./lib/*"]
     }
   },
