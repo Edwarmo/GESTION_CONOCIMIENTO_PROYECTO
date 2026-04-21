@@ -7,7 +7,9 @@ export default function FormComponent() {
   const [formData, setFormData] = useState({
     nombre: "",
     telefono: "",
-    pedido: ""
+    pedido: "",
+    totalCop: "",
+    consentimiento: false
   });
   
   const [loading, setLoading] = useState(false);
@@ -27,6 +29,10 @@ export default function FormComponent() {
     if (!nombre.trim() || !telefono.trim() || !pedido.trim()) {
       return { isValid: false, message: "Faltan datos para continuar", type: "warning" };
     }
+
+    if (!formData.consentimiento) {
+      return { isValid: false, message: "Debes aceptar la política de tratamiento de datos (Ley 1581)", type: "warning" };
+    }
     
     const phoneRegex = /^\d{10}$/;
     if (!phoneRegex.test(telefono.trim())) {
@@ -36,7 +42,7 @@ export default function FormComponent() {
     return { isValid: true };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const validation = validate();
@@ -48,33 +54,41 @@ export default function FormComponent() {
     setLoading(true);
     
     try {
-      const { nombre, telefono, pedido } = formData;
+      const { nombre, telefono, pedido, totalCop } = formData;
+      const totalParsed = parseFloat(totalCop) || 0;
       
-      // 1. Armamos el mensaje elegante que vas a recibir tú en WhatsApp
-      const mensaje = `¡Hola! Tienes un nuevo pedido 📦\n\n*Cliente:* ${nombre}\n*Su contacto:* ${telefono}\n\n*Detalles del pedido:*\n${pedido}`;
+      // 1. Guardar en Google Sheets vía API route (server-side)
+      await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, telefono, pedido, totalCop: totalParsed }),
+      }).catch((err) => console.warn("Sheets sync failed (non-critical):", err));
 
-      // 2. Leemos TU teléfono (donde quieres recibir)
+      // 2. Armamos el mensaje elegante que vas a recibir tú en WhatsApp
+      const mensaje = `¡Hola! Tienes un nuevo pedido 📦\n\n*Cliente:* ${nombre}\n*Su contacto:* ${telefono}\n\n*Detalles del pedido:*\n${pedido}\n*Valor estimado:* $${totalParsed.toLocaleString('es-CO')} COP`;
+
+      // 3. Leemos TU teléfono (donde quieres recibir)
       const celularDestino = process.env.NEXT_PUBLIC_ADMIN_PHONE || "521234567890";
 
-      // 3. Generamos el link Universal de WhatsApp
+      // 4. Generamos el link Universal de WhatsApp
       const waLink = `https://wa.me/${celularDestino}?text=${encodeURIComponent(mensaje)}`;
 
-      // 4. Abrimos WhatsApp web o la app móvil en el teléfono de TU CLIENTE
+      // 5. Abrimos WhatsApp web o la app móvil en el teléfono de TU CLIENTE
       window.open(waLink, "_blank");
 
       setToast({ 
         visible: true, 
         type: "success", 
-        message: "¡Abriendo WhatsApp para enviar tu pedido!" 
+        message: "¡Pedido guardado y abriendo WhatsApp!" 
       });
       
       // Limpiamos el formulario
-      setFormData({ nombre: "", telefono: "", pedido: "" });
+      setFormData({ nombre: "", telefono: "", pedido: "", totalCop: "", consentimiento: false });
     } catch (error) {
       setToast({ 
         visible: true, 
         type: "error", 
-        message: "Error al abrir WhatsApp" 
+        message: "Error al procesar el pedido" 
       });
     } finally {
       setTimeout(() => setLoading(false), 1500); // Pequeña pausa antes de reactivar botón
@@ -127,12 +141,52 @@ export default function FormComponent() {
           />
         </div>
         
+        <div className="input-group">
+          <label htmlFor="totalCop" className="input-label">Total Estimado en COP (Opcional)</label>
+          <input 
+            type="number" 
+            id="totalCop" 
+            name="totalCop" 
+            className="glass-input" 
+            placeholder="Ej. 15000"
+            value={formData.totalCop}
+            onChange={handleChange}
+            min="0"
+          />
+        </div>
+        
+        <div className="input-group">
+          <label className="flex items-start gap-2 cursor-pointer text-sm">
+            <input
+              type="checkbox"
+              name="consentimiento"
+              checked={formData.consentimiento}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, consentimiento: e.target.checked }))
+              }
+              className="mt-1 shrink-0"
+            />
+            <span>
+              Autorizo el tratamiento de mis datos personales conforme a la{" "}
+              <a
+                href="/politica-de-datos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Política de Tratamiento de Datos
+              </a>{" "}
+              (Ley 1581 de 2012).
+            </span>
+          </label>
+        </div>
+
         <button 
           type="submit" 
           disabled={loading} 
           className="glow-button mt-4"
         >
-          {loading ? "Abriendo WhatsApp..." : "Enviar Pedido por WhatsApp"}
+          {loading ? "Procesando..." : "Enviar Pedido por WhatsApp"}
         </button>
       </form>
       

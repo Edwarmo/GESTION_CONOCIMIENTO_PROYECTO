@@ -308,3 +308,162 @@ body {
     min-width: auto;
   }
 }
+
+/* ==================================
+   AUTH PAGE — LOGO
+   ================================== */
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.auth-logo-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.8));
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6)); }
+  50%       { filter: drop-shadow(0 0 20px rgba(0, 240, 255, 1)); }
+}
+
+/* ==================================
+   TAB SWITCHER
+   ================================== */
+.tab-switcher {
+  display: flex;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  padding: 0.65rem 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.tab-btn:hover:not(.tab-active) {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tab-active {
+  background: linear-gradient(135deg, rgba(0, 102, 255, 0.5), rgba(0, 240, 255, 0.4));
+  color: #fff !important;
+  box-shadow: 0 2px 10px rgba(0, 240, 255, 0.2);
+}
+
+/* ==================================
+   AUTH EXTRAS
+   ================================== */
+.auth-switch-text {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+
+.auth-link {
+  background: none;
+  border: none;
+  color: var(--color-primary-cyan);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.auth-link:hover {
+  color: #fff;
+}
+
+/* ==================================
+   GLASS SELECT
+   ================================== */
+.glass-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  cursor: pointer;
+}
+
+.glass-select option {
+  background: #0d1020;
+  color: #fff;
+}
+
+/* ==================================
+   GLOW BUTTON VARIANTS
+   ================================== */
+.glow-button-green {
+  background: linear-gradient(135deg, rgba(0, 180, 100, 0.8) 0%, rgba(0, 255, 136, 0.8) 100%);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.glow-button-green:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(0, 180, 100, 1) 0%, rgba(0, 255, 136, 1) 100%);
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+}
+
+.glow-button-purple {
+  background: linear-gradient(135deg, rgba(120, 40, 255, 0.8) 0%, rgba(200, 80, 255, 0.8) 100%);
+  box-shadow: 0 4px 15px rgba(160, 60, 255, 0.3);
+}
+
+.glow-button-purple:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(120, 40, 255, 1) 0%, rgba(200, 80, 255, 1) 100%);
+  box-shadow: 0 6px 20px rgba(160, 60, 255, 0.5);
+}
+
+/* ==================================
+   FORM BADGE (info pill)
+   ================================== */
+.form-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 240, 255, 0.07);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.82rem;
+  color: rgba(0, 240, 255, 0.9);
+}
+
+/* ==================================
+   REQUIRED STAR
+   ================================== */
+.required-star {
+  color: #ff6b6b;
+  margin-left: 2px;
+}
+
+/* ==================================
+   RESPONSIVE AUTH
+   ================================== */
+@media (max-width: 480px) {
+  .tab-btn {
+    font-size: 0.78rem;
+    padding: 0.55rem 0.3rem;
+  }
+}
