@@ -1,25 +1,31 @@
 /**
- * app/api/orders/route.ts
+ * app/api/orders/route.js
  *
  * API Route: POST /api/orders
  * Adaptador de entrada que invoca el caso de uso CreateOrder
  * Maneja errores de dominio e infraestructura con códigos HTTP apropiados
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { container } from '@/lib/infrastructure/di/DIContainer';
+import { NextResponse } from 'next/server';
+import { container } from '@/lib/infrastructure/di/DIContainer.js';
 import { DomainError } from '@/core/errors/DomainError';
 import { InfrastructureError } from '@/lib/infrastructure/InfrastructureError';
 
-export async function POST(request: NextRequest) {
+export async function POST(request) {
   try {
+    console.log('[POST /api/orders] Iniciando...');
     const body = await request.json();
+    console.log('[POST /api/orders] Body recibido:', body);
 
     // Obtener caso de uso desde el contenedor DI
+    console.log('[POST /api/orders] Obteniendo caso de uso...');
     const createOrderUseCase = container.getCreateOrderUseCase();
+    console.log('[POST /api/orders] Caso de uso obtenido');
 
     // Ejecutar lógica de negocio
+    console.log('[POST /api/orders] Ejecutando caso de uso...');
     const result = await createOrderUseCase.execute(body);
+    console.log('[POST /api/orders] Caso de uso ejecutado exitosamente');
 
     return NextResponse.json(
       {
@@ -33,8 +39,14 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    console.error('[POST /api/orders] ERROR CAPTURADO:', error);
+    console.error('[POST /api/orders] Error name:', error.name);
+    console.error('[POST /api/orders] Error message:', error.message);
+    console.error('[POST /api/orders] Error stack:', error.stack);
+    
     // Manejo centralizado de errores
     if (error instanceof DomainError) {
+      console.log('[POST /api/orders] Es un DomainError');
       return NextResponse.json(
         {
           success: false,
@@ -48,6 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (error instanceof InfrastructureError) {
+      console.log('[POST /api/orders] Es un InfrastructureError');
       console.error('[POST /api/orders] Infrastructure error:', error.toJSON());
       return NextResponse.json(
         {
@@ -62,12 +75,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Error desconocido
+    console.log('[POST /api/orders] Es un error desconocido');
     console.error('[POST /api/orders] Unexpected error:', error);
     return NextResponse.json(
       {
         success: false,
         error: {
-          message: 'Error inesperado del servidor',
+          message: error.message || 'Error inesperado del servidor',
           code: 'UNKNOWN_ERROR',
         },
       },
@@ -76,7 +90,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const phone = searchParams.get('phone');

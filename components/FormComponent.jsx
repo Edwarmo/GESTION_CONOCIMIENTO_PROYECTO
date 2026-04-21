@@ -51,47 +51,62 @@ export default function FormComponent() {
       return;
     }
 
+    const APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL;
+    if (!APPS_SCRIPT_URL) {
+      console.error("❌ NEXT_PUBLIC_APPS_SCRIPT_URL no está definida en .env.local");
+      setToast({ visible: true, type: "error", message: "Error de configuración" });
+      return;
+    }
+
     setLoading(true);
     
     try {
       const { nombre, telefono, pedido, totalCop } = formData;
       const totalParsed = parseFloat(totalCop) || 0;
       
-      // 1. Guardar en Google Sheets vía API route (server-side)
-      await fetch("/api/orders", {
+      // ① PRIMERO escribir en Sheets — SIEMPRE antes de abrir WhatsApp
+      const payload = {
+        sheet: "Pedidos",
+        data: {
+          Cliente: nombre,
+          Telefono: telefono,
+          Pedido: pedido,
+          Fecha: new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" }),
+          Estado: "PENDIENTE",
+          TotalCOP: totalParsed
+        }
+      };
+
+      await fetch(APPS_SCRIPT_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, telefono, pedido, totalCop: totalParsed }),
-      }).catch((err) => console.warn("Sheets sync failed (non-critical):", err));
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload),
+        mode: "no-cors"
+      });
 
-      // 2. Armamos el mensaje elegante que vas a recibir tú en WhatsApp
-      const mensaje = `¡Hola! Tienes un nuevo pedido 📦\n\n*Cliente:* ${nombre}\n*Su contacto:* ${telefono}\n\n*Detalles del pedido:*\n${pedido}\n*Valor estimado:* $${totalParsed.toLocaleString('es-CO')} COP`;
+      console.log("✅ Pedido enviado a Sheets");
 
-      // 3. Leemos TU teléfono (donde quieres recibir)
-      const celularDestino = process.env.NEXT_PUBLIC_ADMIN_PHONE || "521234567890";
-
-      // 4. Generamos el link Universal de WhatsApp
-      const waLink = `https://wa.me/${celularDestino}?text=${encodeURIComponent(mensaje)}`;
-
-      // 5. Abrimos WhatsApp web o la app móvil en el teléfono de TU CLIENTE
-      window.open(waLink, "_blank");
+      // ② DESPUÉS abrir WhatsApp (nunca antes)
+      const msg = `¡Hola! Nuevo pedido 📦\n\n*Cliente:* ${nombre}\n*Tel:* ${telefono}\n\n*Pedido:*\n${pedido}`;
+      const waUrl = `https://wa.me/${process.env.NEXT_PUBLIC_ADMIN_PHONE}?text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, "_blank");
 
       setToast({ 
         visible: true, 
         type: "success", 
-        message: "¡Pedido guardado y abriendo WhatsApp!" 
+        message: "¡Pedido registrado y enviado!" 
       });
       
-      // Limpiamos el formulario
       setFormData({ nombre: "", telefono: "", pedido: "", totalCop: "", consentimiento: false });
-    } catch (error) {
+    } catch (err) {
+      console.error("❌ Error al enviar a Sheets:", err);
       setToast({ 
         visible: true, 
         type: "error", 
-        message: "Error al procesar el pedido" 
+        message: "Error al registrar el pedido. Intenta de nuevo." 
       });
     } finally {
-      setTimeout(() => setLoading(false), 1500); // Pequeña pausa antes de reactivar botón
+      setLoading(false);
     }
   };
 
@@ -142,7 +157,7 @@ export default function FormComponent() {
         </div>
         
         <div className="input-group">
-          <label htmlFor="totalCop" className="input-label">Total Estimado en COP (Opcional)</label>
+          <label htmlFor="totalCop" className="input-label">Total Estimado (COP - Opcional)</label>
           <input 
             type="number" 
             id="totalCop" 
