@@ -1,5 +1,5 @@
-import { config } from '../config';
-import { ExternalServiceError } from '../InfrastructureError';
+import { config } from '../../../infrastructure/config';
+import { ExternalServiceError } from '../../../infrastructure/InfrastructureError';
 
 /**
  * Estructura de una fila para Google Sheets

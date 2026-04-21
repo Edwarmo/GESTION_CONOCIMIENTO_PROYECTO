@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Order, OrderStatus } from '@core/entities/Order';
 import { IOrderRepository } from '@core/repositories/interfaces/IOrderRepository';
-import { DatabaseError } from '../InfrastructureError';
+import { DatabaseError } from '../../InfrastructureError';
 
 /**
  * Implementación de IOrderRepository usando Prisma ORM

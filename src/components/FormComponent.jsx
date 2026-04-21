@@ -1,41 +1,91 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ToastAlert from "./ToastAlert";
-import { useOrderForm } from "@/hooks/useOrderForm";
-import { container } from "@infrastructure/di/DIContainer";
 
 export default function FormComponent() {
-  const { data, loading, error, success, updateField, submitOrder, reset } = useOrderForm();
+  const [formData, setFormData] = useState({
+    nombre: "",
+    telefono: "",
+    pedido: "",
+    totalCop: "",
+    consentimiento: false
+  });
+  
+  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ visible: false, type: "success", message: "" });
   
   const handleCloseToast = () => setToast((prev) => ({ ...prev, visible: false }));
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    updateField(name, type === "checkbox" ? checked : value);
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    if (error) {
-      setToast({ visible: true, type: "error", message: error });
+  const validate = () => {
+    const { nombre, telefono, pedido } = formData;
+    
+    if (!nombre.trim() || !telefono.trim() || !pedido.trim()) {
+      return { isValid: false, message: "Faltan datos para continuar", type: "warning" };
     }
-  }, [error]);
+
+    if (!formData.consentimiento) {
+      return { isValid: false, message: "Debes aceptar la política de tratamiento de datos (Ley 1581)", type: "warning" };
+    }
+    
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(telefono.trim())) {
+      return { isValid: false, message: "El teléfono debe tener exactamente 10 dígitos numéricos", type: "warning" };
+    }
+    
+    return { isValid: true };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // El hook maneja el state y error. Intentamos enviar al backend
+    const validation = validate();
+    if (!validation.isValid) {
+      setToast({ visible: true, type: validation.type, message: validation.message });
+      return;
+    }
+
+    const APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL;
+    if (!APPS_SCRIPT_URL) {
+      console.error("❌ NEXT_PUBLIC_APPS_SCRIPT_URL no está definida en .env.local");
+      setToast({ visible: true, type: "error", message: "Error de configuración" });
+      return;
+    }
+
+    setLoading(true);
+    
     try {
-      const result = await submitOrder();
+      const { nombre, telefono, pedido, totalCop } = formData;
+      const totalParsed = parseFloat(totalCop) || 0;
       
-      // Si la API respondió con éxito, el servidor hizo el trabajo de BD y Sheets.
-      // Ahora solo abrimos el enlace de WhatsApp (esto sigue en frontend porque 
-      // requiere abrir la app de WA del usuario).
-      
-      const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE;
-      const msg = `¡Hola! Nuevo pedido 📦\n\n*Cliente:* ${result.order.customerName}\n*Tel:* ${result.order.customerPhone}\n\n*Pedido:*\n${result.order.details}`;
-      const waUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(msg)}`;
+      const payload = {
+        sheet: "Pedidos",
+        data: {
+          Cliente: nombre,
+          Telefono: telefono,
+          Pedido: pedido,
+          Fecha: new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" }),
+          Estado: "PENDIENTE",
+          TotalCOP: totalParsed
+        }
+      };
+
+      await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload),
+        mode: "no-cors"
+      });
+
+      console.log("✅ Pedido enviado a Sheets");
+
+      const msg = `¡Hola! Nuevo pedido 📦\n\n*Cliente:* ${nombre}\n*Tel:* ${telefono}\n\n*Pedido:*\n${pedido}`;
+      const waUrl = `https://wa.me/${process.env.NEXT_PUBLIC_ADMIN_PHONE}?text=${encodeURIComponent(msg)}`;
       window.open(waUrl, "_blank");
 
       setToast({ 
@@ -44,8 +94,16 @@ export default function FormComponent() {
         message: "¡Pedido registrado y enviado!" 
       });
       
+      setFormData({ nombre: "", telefono: "", pedido: "", totalCop: "", consentimiento: false });
     } catch (err) {
-      // El error se muestra via useEffect
+      console.error("❌ Error al enviar a Sheets:", err);
+      setToast({ 
+        visible: true, 
+        type: "error", 
+        message: "Error al registrar el pedido. Intenta de nuevo." 
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,7 +119,7 @@ export default function FormComponent() {
             name="nombre" 
             className="glass-input" 
             placeholder="Ej. Juan Pérez"
-            value={data.nombre}
+            value={formData.nombre}
             onChange={handleChange}
             autoComplete="name"
           />
@@ -75,7 +133,7 @@ export default function FormComponent() {
             name="telefono" 
             className="glass-input" 
             placeholder="Ej. 5512345678"
-            value={data.telefono}
+            value={formData.telefono}
             onChange={handleChange}
             maxLength={10}
             autoComplete="tel"
@@ -89,7 +147,7 @@ export default function FormComponent() {
             name="pedido" 
             className="glass-input input-textarea" 
             placeholder="Describe los productos que necesitas..."
-            value={data.pedido}
+            value={formData.pedido}
             onChange={handleChange}
             rows={4}
           />
@@ -114,8 +172,10 @@ export default function FormComponent() {
             <input
               type="checkbox"
               name="consentimiento"
-              checked={data.consentimiento}
-              onChange={handleChange}
+              checked={formData.consentimiento}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, consentimiento: e.target.checked }))
+              }
               className="mt-1 shrink-0"
             />
             <span>
