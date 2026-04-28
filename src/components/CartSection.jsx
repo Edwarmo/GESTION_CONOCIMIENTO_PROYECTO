@@ -11,7 +11,9 @@ export default function CartSection({
   direccion, setDireccion, 
   selectedBarrio, setSelectedBarrio, 
   acceptedPolicy, setAcceptedPolicy,
-  handleCheckout 
+  handleCheckout,
+  isSubmitting = false,
+  cooldown = 0
 }) {
   return (
     <div className="cart-drawer" style={{ 
@@ -74,7 +76,7 @@ export default function CartSection({
                           style={{ background: "#1e73e8", border: "none", color: "#fff", cursor: "pointer", fontSize: "1rem", width: "24px", height: "24px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 5px rgba(30,115,232,0.4)" }}
                         >+</button>
                       </div>
-                      <div style={{ color: "#fff", fontSize: "1rem", fontWeight: "bold" }}>${(item.price * item.quantity).toLocaleString()}</div>
+                      <div suppressHydrationWarning style={{ color: "#fff", fontSize: "1rem", fontWeight: "bold" }}>${(item.price * item.quantity).toLocaleString("es-CO")}</div>
                     </div>
                   </div>
                 </div>
@@ -162,24 +164,33 @@ export default function CartSection({
 
             <div style={{ display: "flex", justifyContent: "space-between", color: "rgba(255,255,255,0.9)", fontSize: "1.2rem", fontWeight: "bold" }}>
               <span>Total:</span>
-              <span>${total.toLocaleString()}</span>
+              <span suppressHydrationWarning>${total.toLocaleString("es-CO")}</span>
             </div>
             
             <button 
               onClick={handleCheckout}
+              disabled={isSubmitting || cooldown > 0}
               style={{ 
                 width: "100%", textAlign: "center",
                 fontSize: "1.1rem", padding: "1.2rem", border: "none", borderRadius: "12px", 
-                fontWeight: "bold", cursor: "pointer", transition: "background 0.2s, transform 0.1s",
-                background: acceptedPolicy ? "#1e73e8" : "rgba(30, 115, 232, 0.4)", color: acceptedPolicy ? "#fff" : "rgba(255,255,255,0.6)",
-                boxShadow: acceptedPolicy ? "0 8px 25px rgba(30, 115, 232, 0.4)" : "none",
+                fontWeight: "bold", cursor: (isSubmitting || cooldown > 0) ? "not-allowed" : "pointer",
+                transition: "background 0.2s, transform 0.1s",
+                background: (isSubmitting || cooldown > 0)
+                  ? "rgba(100,100,100,0.5)"
+                  : acceptedPolicy ? "#1e73e8" : "rgba(30, 115, 232, 0.4)",
+                color: (isSubmitting || cooldown > 0) ? "rgba(255,255,255,0.4)" : acceptedPolicy ? "#fff" : "rgba(255,255,255,0.6)",
+                boxShadow: acceptedPolicy && !isSubmitting && !cooldown ? "0 8px 25px rgba(30, 115, 232, 0.4)" : "none",
                 letterSpacing: "0.02em"
               }}
-              onMouseDown={(e) => { if(acceptedPolicy) e.currentTarget.style.transform = "scale(0.98)" }}
+              onMouseDown={(e) => { if(acceptedPolicy && !isSubmitting && !cooldown) e.currentTarget.style.transform = "scale(0.98)" }}
               onMouseUp={(e) => e.currentTarget.style.transform = "scale(1)"}
               onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
             >
-              Finalizar Pedido
+              {isSubmitting
+                ? "Enviando pedido..."
+                : cooldown > 0
+                  ? `Espera ${cooldown}s...`
+                  : "Finalizar Pedido 📲"}
             </button>
           </div>
         </>

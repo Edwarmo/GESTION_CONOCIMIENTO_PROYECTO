@@ -41,8 +41,8 @@ export default function ProductGrid({ products, addToCart }) {
                 </p>
                 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
-                  <span style={{ fontSize: "1.05rem", fontWeight: "bold", color: "#fff" }}>
-                    ${currentPrice.toLocaleString()}
+                  <span style={{ fontSize: "1.05rem", fontWeight: "bold", color: "#fff" }} suppressHydrationWarning>
+                    ${currentPrice.toLocaleString("es-CO")}
                   </span>
                   <button 
                     onClick={() => addToCart(product, hasSizes ? defaultSize : undefined)}

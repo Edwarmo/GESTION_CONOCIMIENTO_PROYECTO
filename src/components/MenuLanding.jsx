@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useProducts } from "../hooks/useProducts";
-import { useDomis } from "../hooks/useDomis";
+import { useState, useCallback, useRef } from "react";
 import MenuHeader from "./MenuHeader";
 import CategoryList from "./CategoryList";
 import ProductGrid from "./ProductGrid";
 import CartSection from "./CartSection";
 
-export default function MenuLanding() {
-  const { products, categories, loading: productsLoading } = useProducts();
-  const { domis, loading: domisLoading } = useDomis();
+export default function MenuLanding({ initialProducts = [], initialCategories = [], initialDomis = [] }) {
+  const products = initialProducts;
+  const categories = initialCategories;
+  const domisData = initialDomis;
 
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -23,14 +22,10 @@ export default function MenuLanding() {
   const [selectedBarrio, setSelectedBarrio] = useState("");
   const [domicilio, setDomicilio] = useState(0);
   const [acceptedPolicy, setAcceptedPolicy] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const cooldownRef = useRef(null);
 
-  if (productsLoading || domisLoading) {
-    return (
-      <div className="main-layout flex-col items-center justify-center">
-        <div className="text-glow-cyan text-xl">Cargando menú...</div>
-      </div>
-    );
-  }
 
   const filteredProducts = selectedCategory === "Todos"
     ? products
@@ -82,7 +77,8 @@ export default function MenuLanding() {
   const total = subtotal + (cart.length > 0 ? domicilio : 0);
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const handleCheckout = async () => {
+  const handleCheckout = useCallback(async () => {
+    if (isSubmitting || cooldown > 0) return;
     if (cart.length === 0) {
       alert("El carrito está vacío");
       return;
@@ -109,37 +105,55 @@ export default function MenuLanding() {
     pedidoText += `\nEnvío: ${selectedBarrio}\nDirección: ${direccion}\nDomicilio: $${domicilio.toLocaleString()}`;
 
     const APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL;
-    if (!APPS_SCRIPT_URL) {
-      alert("Error: NEXT_PUBLIC_APPS_SCRIPT_URL no configurado.");
-      return;
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || "573000000000";
+
+    // Abrir la ventana ANTES del await para que el navegador no la bloquee
+    // (los browsers bloquean window.open si se llama después de un await)
+    const waWindow = window.open("", "_blank");
+
+    setIsSubmitting(true);
+
+    // 1. Enviar a Google Sheets (obligatorio — se intenta siempre)
+    let sheetsSent = false;
+    if (APPS_SCRIPT_URL) {
+      try {
+        const payload = {
+          sheet: "Pedidos",
+          data: {
+            Cliente: nombre,
+            Telefono: telefono,
+            Pedido: pedidoText,
+            Fecha: new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" }),
+            Estado: "PENDIENTE",
+            TotalCOP: total
+          }
+        };
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(payload),
+          mode: "no-cors"
+        });
+        sheetsSent = true;
+        console.log("✅ Pedido enviado a Sheets");
+      } catch (sheetsErr) {
+        console.error("❌ Error al enviar a Sheets:", sheetsErr);
+      }
+    } else {
+      console.warn("⚠️ NEXT_PUBLIC_APPS_SCRIPT_URL no está configurado en .env.local");
     }
 
+    // 2. Asignar la URL a la ventana ya abierta — WhatsApp siempre llega
     try {
-      const payload = {
-        sheet: "Pedidos",
-        data: {
-          Cliente: nombre,
-          Telefono: telefono,
-          Pedido: pedidoText,
-          Fecha: new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" }),
-          Estado: "PENDIENTE",
-          TotalCOP: total
-        }
-      };
-
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payload),
-        mode: "no-cors"
-      });
-
-      console.log("✅ Pedido enviado a Sheets");
-
-      const msg = `¡Hola! Nuevo pedido 📦\n\n*Cliente:* ${nombre}\n*Tel:* ${telefono}\n*Dirección:* ${direccion} (${selectedBarrio})\n\n*Pedido:*\n${pedidoText}\n\n*Total:* $${total.toLocaleString()}`;
-      const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || "573000000000";
+      const msg = `¡Hola! Nuevo pedido 📦\n\n*Cliente:* ${nombre}\n*Tel:* ${telefono}\n*Dirección:* ${direccion} (${selectedBarrio})\n\n*Pedido:*\n${pedidoText}\n\n*Total:* $${total.toLocaleString("es-CO")}${!sheetsSent ? "\n\n⚠️ No se pudo registrar en la base de datos." : ""}`;
       const waUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(msg)}`;
-      window.open(waUrl, "_blank");
+      
+      if (waWindow) {
+        waWindow.location.href = waUrl;
+      } else {
+        // Fallback si el navegador bloqueó incluso la apertura inicial
+        window.location.href = waUrl;
+      }
 
       setCart([]);
       setIsCartOpen(false);
@@ -148,14 +162,21 @@ export default function MenuLanding() {
       setDireccion("");
       setSelectedBarrio("");
       setAcceptedPolicy(false);
-
-      alert("¡Pedido registrado y enviado por WhatsApp!");
-      
-    } catch (err) {
-      console.error("❌ Error al enviar a Sheets:", err);
-      alert("Error al registrar el pedido. Intenta de nuevo.");
+    } catch (waErr) {
+      console.error("❌ Error al abrir WhatsApp:", waErr);
+      alert("El pedido se procesó pero no se pudo abrir WhatsApp. Contacta al restaurante manualmente.");
+    } finally {
+      setIsSubmitting(false);
+      // Cooldown de 5 segundos para evitar pedidos duplicados
+      let secs = 5;
+      setCooldown(secs);
+      cooldownRef.current = setInterval(() => {
+        secs -= 1;
+        setCooldown(secs);
+        if (secs <= 0) clearInterval(cooldownRef.current);
+      }, 1000);
     }
-  };
+  }, [isSubmitting, cooldown, cart, nombre, telefono, direccion, selectedBarrio, acceptedPolicy, domicilio, total]);
 
   return (
     <div className="app-layout">
@@ -218,6 +239,8 @@ export default function MenuLanding() {
         selectedBarrio={selectedBarrio} setSelectedBarrio={setSelectedBarrio}
         acceptedPolicy={acceptedPolicy} setAcceptedPolicy={setAcceptedPolicy}
         handleCheckout={handleCheckout}
+        isSubmitting={isSubmitting}
+        cooldown={cooldown}
       />
     </div>
   );
