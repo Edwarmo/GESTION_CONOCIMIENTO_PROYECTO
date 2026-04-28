@@ -1,0 +1,28 @@
+id,name,price,image,description,category
+1,Patacones con hogao,7000,photo-1618160702438-9b02ab6515c9,Crujientes patacones servidos con hogao tradicional.,Entradas
+2,Arepas con carne desmechada,7000,Arepa_Con_Desmechada.png,Arepitas rellenas con deliciosa carne desmechada.,Entradas
+3,Trozos de chicharrón,7000,photo-1618160702438-9b02ab6515c9,Chicharrón crocante en porciones ideales para picar.,Entradas
+4,Nugget de pollo,7000,https://via.placeholder.com/300x200?text=Nuggets,Nuggets dorados y jugosos ideales para compartir.,Entradas
+6,Promoción Arroz Paisa,13000,https://via.placeholder.com/300x200?text=Promocion,"Arroz Paisa con papa y bebida, ideal para almorzar.",Platos personales
+7,Porcion pollo frito,7000,https://via.placeholder.com/300x200?text=Pollo+Frito,Porción: 1/4 de pollo frito crujiente.,Adiciones
+8,Filete de pollo en salsa de queso y champiñones,17000,https://via.placeholder.com/300x200?text=Pollo+Queso+Champiñones,"Acompañado de arroz, papas a la francesa y bebida.",Platos personales
+9,Costillas en salsa BBQ oriental,17000,costillas_bbq_plato.png,"Servidas con arroz, papas a la francesa y bebida.",Platos personales
+10,Res con champiñón,17000,https://via.placeholder.com/300x200?text=Res+Champiñón,"Carne de res con champiñón, arroz, papas y bebida.",Platos personales
+11,Cerdo agridulce,17000,https://via.placeholder.com/300x200?text=Cerdo+Agridulce,"Cerdo agridulce con arroz, papas a la francesa y bebida.",Platos personales
+12,Filete de cerdo en salsa de maracuyá,17000,https://via.placeholder.com/300x200?text=Cerdo+Maracuyá,"Acompañado de arroz, papas a la francesa y bebida.",Platos personales
+13,Camarón en salsa de champiñón,17000,https://via.placeholder.com/300x200?text=Camarón+Champiñón,"Camarón en salsa de champiñón con arroz, patacón y bebida.",Platos personales
+14,Filete de pollo,17000,https://via.placeholder.com/300x200?text=Filete+Pollo,"Acompañado de arroz, papas a la francesa y bebida.",Platos personales
+15,Pollo agridulce,17000,https://via.placeholder.com/300x200?text=Pollo+Agridulce,"Pollo agridulce con arroz, papas a la francesa y bebida.",Platos personales
+16,1/4 de pollo frito,17000,https://via.placeholder.com/300x200?text=Pollo+Frito,"Con arroz, papas a la francesa y bebida.",Platos personales
+17,Arroz Paisa,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",imagenpaisa.jpg,"Chorizo, pollo, cerdo, salchicha, chicharrón, plátano maduro, maíz tierno.",Arroces
+18,Arroz Mixto de Verduras y Carnes,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Arroz+Mixto,"Pollo, cerdo, chorizo, camarón, jamón y salteado de verduras.",Arroces
+19,Arroz Marinero,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Arroz+Marinero,"Camarones, palmitos de cangrejo, calamar, pulpo, raíces chinas, arroz de la casa.",Arroces
+20,Arroz Chino,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Arroz+Chino,"Camarón, cerdo, pollo, jamón, arroz de soya, raíces chinas.",Arroces
+21,Arroz Ranchero,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Arroz+Ranchero,"Alas BBQ, salchicha, costilla ahumada, chorizo, cerdo, jamón y maíz tierno.",Arroces
+22,"Arroz Camarón, Pollo y Jamón","{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Arroz+Camarón+Pollo+Jamón,"Delicioso arroz con camarón, pollo y jamón. ",Arroces
+23,Arroz De Nuestra Tierra,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Arroz+Tierra,"Frijol, cerdo, costilla ahumada, chorizo y chicharrón.",Arroces
+24,Arroz Vegetariano,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Arroz+Vegetariano,"Salteado de verduras frescas (apio, pimentón, zucchini, brócoli, maíz tierno, raíces chinas y verduras saltedas.",Arroces
+25,Combo Paisa,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",https://via.placeholder.com/300x200?text=Combo+Paisa,"Arroz Paisa, costillas de cerdo en salsa BBQ oriental, papas a la francesa y gaseosa. ",Combos
+26,Combo Valenciana,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",comb_valanciana.png,"Arroz Paisa, pollo frito, papas a la francesa y gaseosa.",Combos
+27,Chop Suey + Arroz,"{""personal 2 personas"": 20000, ""mediano 4 personas"": 40000, ""familiar 6 personas"": 50000}",comb_valanciana.png,"Pollo, cerdo, camarones, jamón ahumado, salteado en frescas verduras.",Platos personales
+28,Coca-cola,"{""400ml"": 4000, ""1.5 l"": 8500 }",comb_valanciana.png,"Bebida gaseosa clásica, ideal para acompañar tus comidas.",Bebidas

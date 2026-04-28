@@ -1,30 +1,15 @@
 import VideoBackground from "../components/VideoBackground";
-import FormComponent from "../components/FormComponent";
+import MenuLanding from "../components/MenuLanding";
 
 export default function HomePage() {
   return (
-    <main className="main-layout">
+    <main className="main-layout" style={{ display: 'block', padding: 0 }}>
       {/* Immersive background component that does not block interaction */}
       <VideoBackground />
 
-      {/* Main centered interactive area */}
-      <div className="content-wrapper animate-fade-slide">
-        
-        {/* Glassmorphism panel with specific SaaS premium properties and Neon Cyan Glow */}
-        <section className="glass-panel glow-cyan">
-          
-          <header className="card-header">
-            <h1 className="text-glow-cyan">Inicia tu Pedido</h1>
-            <p>Automatización de ingresos vía WhatsApp</p>
-          </header>
-
-          <div className="form-wrapper mt-4">
-             <FormComponent />
-          </div>
-          
-        </section>
-        
-      </div>
+      {/* Renderizamos la nueva Landing del Menú, que internamente carga el Formulario */}
+      <MenuLanding />
+      
     </main>
   );
 }

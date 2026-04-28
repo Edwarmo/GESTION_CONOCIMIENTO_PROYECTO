@@ -122,7 +122,35 @@ function doPost(e) {
   }
 }
 
-function doGet() {
+function doGet(e) {
+  try {
+    if (e && e.parameter && e.parameter.action === "getProducts") {
+      const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+      const sheet = ss.getSheetByName("Productos");
+      if (!sheet) return _jsonResponse([]);
+      
+      const data = sheet.getDataRange().getValues();
+      if (data.length <= 1) return _jsonResponse([]);
+      
+      const headers = data[0];
+      const products = [];
+      for (let i = 1; i < data.length; i++) {
+        let obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j]] = data[i][j];
+        }
+        
+        // Parsear JSON si el precio o imagen es un objeto (ej. tallas)
+        if (typeof obj.price === 'string' && obj.price.startsWith('{')) {
+          try { obj.price = JSON.parse(obj.price); } catch(err){}
+        }
+        products.push(obj);
+      }
+      return _jsonResponse(products);
+    }
+  } catch (err) {
+    return _jsonResponse({ error: err.message }, 500);
+  }
   return _jsonResponse({ status: "ok", proyecto: "SGPMI - Feelback BI" });
 }
 

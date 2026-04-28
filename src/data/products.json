@@ -1,0 +1,221 @@
+[
+  {
+    "id": 1,
+    "name": "Patacones con hogao",
+    "price": 7000,
+    "image": "photo-1618160702438-9b02ab6515c9",
+    "description": "Crujientes patacones servidos con hogao tradicional.",
+    "category": "Entradas"
+  },
+  {
+    "id": 2,
+    "name": "Arepas con carne desmechada",
+    "price": 7000,
+    "image": "Arepa_Con_Desmechada.png",
+    "description": "Arepitas rellenas con deliciosa carne desmechada.",
+    "category": "Entradas"
+  },
+  {
+    "id": 3,
+    "name": "Trozos de chicharrón",
+    "price": 7000,
+    "image": "photo-1618160702438-9b02ab6515c9",
+    "description": "Chicharrón crocante en porciones ideales para picar.",
+    "category": "Entradas"
+  },
+  {
+    "id": 4,
+    "name": "Nugget de pollo",
+    "price": 7000,
+    "image": "https://via.placeholder.com/300x200?text=Nuggets",
+    "description": "Nuggets dorados y jugosos, ideales para compartir.",
+    "category": "Entradas"
+  },
+  {
+    "id": 6,
+    "name": "Promoción Arroz Paisa",
+    "price": 13000,
+    "image": "https://via.placeholder.com/300x200?text=Promocion",
+    "description": "Arroz Paisa con papa y bebida, ideal para almorzar.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 7,
+    "name": "Porcion pollo frito",
+    "price": 7000,
+    "image": "https://via.placeholder.com/300x200?text=Pollo+Frito",
+    "description": "Porción: 1/4 de pollo frito crujiente.",
+    "category": "Adiciones"
+  },
+  {
+    "id": 8,
+    "name": "Filete de pollo en salsa de queso y champiñones",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Pollo+Queso+Champiñones",
+    "description": "Acompañado de arroz, papas a la francesa y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 9,
+    "name": "Costillas en salsa BBQ oriental",
+    "price": 17000,
+    "image": "costillas_bbq_plato.png",
+    "description": "Servidas con arroz, papas a la francesa y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 10,
+    "name": "Res con champiñón",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Res+Champiñón",
+    "description": "Carne de res con champiñón, arroz, papas y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 11,
+    "name": "Cerdo agridulce",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Cerdo+Agridulce",
+    "description": "Cerdo agridulce con arroz, papas a la francesa y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 12,
+    "name": "Filete de cerdo en salsa de maracuyá",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Cerdo+Maracuyá",
+    "description": "Acompañado de arroz, papas a la francesa y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 13,
+    "name": "Camarón en salsa de champiñón",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Camarón+Champiñón",
+    "description": "Camarón en salsa de champiñón con arroz, patacón y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 14,
+    "name": "Filete de pollo",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Filete+Pollo",
+    "description": "Acompañado de arroz, papas a la francesa y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 15,
+    "name": "Pollo agridulce",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Pollo+Agridulce",
+    "description": "Pollo agridulce con arroz, papas a la francesa y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 16,
+    "name": "1/4 de pollo frito",
+    "price": 17000,
+    "image": "https://via.placeholder.com/300x200?text=Pollo+Frito",
+    "description": "Con arroz, papas a la francesa y bebida.",
+    "category": "Platos personales"
+  },
+  {
+    "id": 17,
+    "name": "Arroz Paisa",
+    "price":   { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "imagenpaisa.jpg",
+    "description": "Chorizo, pollo, cerdo, salchicha, chicharrón, plátano maduro, maíz tierno.",
+    "category": "Arroces"
+  },
+  {
+    "id": 18,
+    "name": "Arroz Mixto de Verduras y Carnes",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Arroz+Mixto",
+    "description": "Pollo, cerdo, chorizo, camarón, jamón y salteado de verduras.",
+    "category": "Arroces"
+  },
+  {
+    "id": 19,
+    "name": "Arroz Marinero",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Arroz+Marinero",
+    "description": "Camarones, palmitos de cangrejo, calamar, pulpo, raíces chinas, arroz de la casa.",
+    "category": "Arroces"
+  },
+  {
+    "id": 20,
+    "name": "Arroz Chino",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Arroz+Chino",
+    "description": "Camarón, cerdo, pollo, jamón, arroz de soya, raíces chinas.",
+    "category": "Arroces"
+  },
+  {
+    "id": 21,
+    "name": "Arroz Ranchero",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Arroz+Ranchero",
+    "description": "Alas BBQ, salchicha, costilla ahumada, chorizo, cerdo, jamón y maíz tierno.",
+    "category": "Arroces"
+  },
+  {
+    "id": 22,
+    "name": "Arroz Camarón, Pollo y Jamón",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Arroz+Camarón+Pollo+Jamón",
+    "description": "Delicioso arroz con camarón, pollo y jamón. ",
+    "category": "Arroces"
+  },
+  {
+    "id": 23,
+    "name": "Arroz De Nuestra Tierra",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Arroz+Tierra",
+    "description": "Frijol, cerdo, costilla ahumada, chorizo y chicharrón.",
+    "category": "Arroces"
+  },
+  {
+    "id": 24,
+    "name": "Arroz Vegetariano",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Arroz+Vegetariano",
+    "description": "Salteado de verduras frescas (apio, pimentón, zucchini, brócoli, maíz tierno, raíces chinas y verduras saltedas.",
+    "category": "Arroces"
+  },
+  {
+    "id": 25,
+    "name": "Combo Paisa",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "https://via.placeholder.com/300x200?text=Combo+Paisa",
+    "description": "Arroz Paisa, costillas de cerdo en salsa BBQ oriental, papas a la francesa y gaseosa. ",
+    "category": "Combos"
+  },
+  {
+    "id": 26,
+    "name": "Combo Valenciana",
+    "price":  { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "image": "comb_valanciana.png",
+    "description": "Arroz Paisa, pollo frito, papas a la francesa y gaseosa.",
+    "category": "Combos"
+  },
+  {
+    "id": 27,
+    "name": "Chop Suey + Arroz",
+    "price": { "personal 2 personas": 20000, "mediano 4 personas": 40000, "familiar 6 personas": 50000 },
+    "images": {
+      "personal 2 personas": "comb_valanciana.png",
+      "mediano 4 personas": "Arepa_Con_Desmechada.png",
+      "familiar 6 personas": "chop-suey-familiar.jpg"
+    },
+    "description": "Pollo, cerdo, camarones, jamón ahumado, salteado en frescas verduras.",
+    "category": "Platos personales"
+  },{
+    "id": 28,
+    "name": "Coca-cola",
+    "price":  { "400ml": 4000, "1.5 l": 8500 },
+    "images": {"400ml": "comb_valanciana.png", "1.5 l": "Arepa_Con_Desmechada.png"},
+    "description": "Bebida gaseosa clásica, ideal para acompañar tus comidas.",
+    "category": "Bebidas"
+  }
+]
