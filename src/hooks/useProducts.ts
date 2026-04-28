@@ -32,11 +32,11 @@ export const useProducts = () => {
         if (data && data.length > 0) {
           setProducts(data);
         } else {
-          setProducts(productsData); // Fallback a local
+          setProducts(productsData as any); // Fallback a local
         }
       } catch (err) {
         console.error("No se pudo cargar desde Google Sheets, usando local.", err);
-        setProducts(productsData); // Fallback a local
+        setProducts(productsData as any); // Fallback a local
       } finally {
         setLoading(false);
       }
